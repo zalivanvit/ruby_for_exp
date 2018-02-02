@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180201205550) do
+ActiveRecord::Schema.define(version: 20180202044353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20180201205550) do
     t.bigint "parents_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_children_on_parent_id"
     t.index ["parents_id"], name: "index_children_on_parents_id"
   end
 
@@ -29,6 +31,8 @@ ActiveRecord::Schema.define(version: 20180201205550) do
     t.integer "age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "child_id"
+    t.index ["child_id"], name: "index_parents_on_child_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -45,9 +49,14 @@ ActiveRecord::Schema.define(version: 20180201205550) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "product_id"
+    t.index ["product_id"], name: "index_toys_on_product_id"
     t.index ["products_id"], name: "index_toys_on_products_id"
   end
 
+  add_foreign_key "children", "parents"
   add_foreign_key "children", "parents", column: "parents_id"
+  add_foreign_key "parents", "children"
+  add_foreign_key "toys", "products"
   add_foreign_key "toys", "products", column: "products_id"
 end
